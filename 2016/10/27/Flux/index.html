@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="ZH EN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="Flux现在的很多在使用的系统都采取的是MVC模式，而前一篇介绍的React自称在MVC里面代表V 的部分，那么Flux就相当于添加M和C的部分。Flux是 Facebook 使用的一套前端应用的架构模式。 一个 Flux 应用主要包含四个部分：  The Dispatcher处理动作分发，维护 Store 之间的依赖关系  The Stores用来存储数据和处理逻辑部分  The Views控制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React交互一：Flux">
+<meta property="og:url" content="https://gracechan6.github.io/2016/10/27/Flux/index.html">
+<meta property="og:site_name" content="Grace&#39;s BLOG">
+<meta property="og:description" content="Flux现在的很多在使用的系统都采取的是MVC模式，而前一篇介绍的React自称在MVC里面代表V 的部分，那么Flux就相当于添加M和C的部分。Flux是 Facebook 使用的一套前端应用的架构模式。 一个 Flux 应用主要包含四个部分：  The Dispatcher处理动作分发，维护 Store 之间的依赖关系  The Stores用来存储数据和处理逻辑部分  The Views控制">
+<meta property="og:locale" content="ZH EN">
+<meta property="og:updated_time" content="2017-09-13T02:34:46.394Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="React交互一：Flux">
+<meta name="twitter:description" content="Flux现在的很多在使用的系统都采取的是MVC模式，而前一篇介绍的React自称在MVC里面代表V 的部分，那么Flux就相当于添加M和C的部分。Flux是 Facebook 使用的一套前端应用的架构模式。 一个 Flux 应用主要包含四个部分：  The Dispatcher处理动作分发，维护 Store 之间的依赖关系  The Stores用来存储数据和处理逻辑部分  The Views控制">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://gracechan6.github.io/2016/10/27/Flux/"/>
+
+
+
+
+
+  <title>React交互一：Flux | Grace's BLOG</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="ZH EN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Grace's BLOG</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://gracechan6.github.io/2016/10/27/Flux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="gracechan6">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Grace's BLOG">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">React交互一：Flux</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-10-27T10:23:38+08:00">
+                2016-10-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Flux"><a href="#Flux" class="headerlink" title="Flux"></a>Flux</h2><p>现在的很多在使用的系统都采取的是MVC模式，而前一篇介绍的React自称在MVC里面代表V 的部分，那么Flux就相当于添加M和C的部分。Flux是 Facebook 使用的一套前端应用的架构模式。</p>
+<p>一个 Flux 应用主要包含四个部分：</p>
+<ul>
+<li><p>The Dispatcher<br>处理动作分发，维护 Store 之间的依赖关系</p>
+</li>
+<li><p>The Stores<br>用来存储数据和处理逻辑部分</p>
+</li>
+<li><p>The Views<br>控制React 组件，这一层可以看作 controller-views，作为视图同时响应用户交互</p>
+</li>
+<li><p>The Actions<br>提供给 dispatcher 传递数据给 store</p>
+</li>
+</ul>
+<p>针对以上提出的概念，下面使用目前项目在使用的几个文件内容来实现这些功能，当然，网络上有很多这类开源的文件，实际项目中也是在这些开源的项目上再进行优化使用的。<br>单向数据流</p>
+<h3 id="单向数据流"><a href="#单向数据流" class="headerlink" title="单向数据流"></a>单向数据流</h3><p>先来了解下Flux的核心“单向数据流“怎么运作的：</p>
+<p><code>Action -&gt; Dispatcher -&gt; Store -&gt; View</code></p>
+<p>更多时候 View 会通过用户交互触发 Action，所以一个简单完整的数据流类似这样：<br>viewer文件结构图</p>
+<p>项目对于交互的整个流程如下：</p>
+<ul>
+<li><p>首先要有action，通过定义一些 action creator 方法根据需要创建 Action 将数据提供给 dispatcher</p>
+</li>
+<li><p>View 层（React组件）通过用户交互会触发 Action</p>
+</li>
+<li><p>Dispatcher 会分发触发的 Action 给所有注册的 Store 的回调函数</p>
+</li>
+<li><p>Store 回调函数根据接收的 Action 更新自身数据之后会触发一个 change 事件通知 View 数据更改了</p>
+</li>
+<li><p>View 会监听这个 change 事件，拿到对应的新数据并调用 setState 更新组件 UI</p>
+</li>
+</ul>
+<p>所有的状态都由 Store 来维护，通过 Action 传递数据，构成了如上所述的单向数据流循环，所以应用中的各部分分工就相当明确，高度解耦了。<br>这种单向数据流使得整个系统都是透明可预测的。</p>
+<h3 id="Dispatcher"><a href="#Dispatcher" class="headerlink" title="Dispatcher"></a>Dispatcher</h3><p>一个应用只需要一个 dispatcher 作为分发中心，管理所有数据流向，分发动作给 Store，没有太多其他的逻辑（一些 action creator 方法也可以放到这里）。<br>Dispatcher 分发动作给 Store 注册的回调函数，这和一般的订阅/发布模式不同的地方在于：</p>
+<ul>
+<li><p>回调函数不是订阅到某一个特定的事件/频道，每个动作会分发给所有注册的回调函数</p>
+</li>
+<li><p>回调函数可以指定在其他回调之后调用</p>
+</li>
+</ul>
+<p>参见comEventMessage/ComEventDispatcher.js<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">var Dispatcher = require(<span class="string">'flux'</span>).Dispatcher;</div><div class="line">var ComEventDispatcher = new Dispatcher();</div><div class="line">var ComEventStore = require(<span class="string">'./ComEventListStore'</span>);</div><div class="line">ComEventDispatcher.register(<span class="keyword">function</span> (action) &#123;</div><div class="line">      ComEventStore.dispatch(action.actionType,action.text);</div><div class="line">&#125;);//主要是这句话</div><div class="line">module.exports = ComEventDispatcher;</div></pre></td></tr></table></figure></p>
+<h3 id="Action"><a href="#Action" class="headerlink" title="Action"></a>Action</h3><p>首先要创建动作，通过定义一些 action creator 方法来创建，这些方法用来暴露给外部调用，通过 dispatch 分发对应的动作，所以 action creator 也称作 dispatcher helper methods 辅助 dipatcher 分发。 参见comEventMessage/ComEventAction.js</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">var ComEventDispatcher = require(<span class="string">'./ComEventDispatcher'</span>);</div><div class="line">var ComEventAction = &#123;</div><div class="line">    dispatch: <span class="keyword">function</span> (eventname,data) &#123;</div><div class="line">        ComEventDispatcher.dispatch(&#123;</div><div class="line">            actionType: eventname,</div><div class="line">            text: data</div><div class="line">        &#125;);</div><div class="line">    &#125;,</div><div class="line">    stopDispatch:<span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">        ComEventDispatcher._stopDispatching();</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line">module.exports = ComEventAction;</div></pre></td></tr></table></figure>
+<p>这里的dispatch就是action creator，通过用户的交互触发，比如按钮点击。当然不单单用户触发才调用，也可以通过计时器的方式等的，然后分发给Store初始数据。通过这一个动作我们可以看出动作其实就是用来封装数据和传递数据的。</p>
+<h3 id="Store"><a href="#Store" class="headerlink" title="Store"></a>Store</h3><p>Store中包含应用的状态和处理逻辑，不同的Store可以管理应用中不同部分的状态。本项目中只使用了一个Store，直接在相应React组件中直接监听相应actionType，然后做出不同的事件处理。（处理逻辑和Flex事件的处理处理逻辑类似的）如comEventMessage/ComEventListStore.js</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">var EventEmitter = require(<span class="string">'events'</span>).EventEmitter;</div><div class="line">var assign = require(<span class="string">'object-assign'</span>);</div><div class="line">var ComEventListStore = assign(&#123;&#125;, EventEmitter.prototype, &#123;</div><div class="line">  event_data: &#123;&#125;,</div><div class="line">  getAll: <span class="function"><span class="title">function</span></span> () &#123;//获取所有数据</div><div class="line">    <span class="built_in">return</span> this.event_data;</div><div class="line">  &#125;,</div><div class="line">  getOne:<span class="keyword">function</span>(key)&#123;//依据key查找单个</div><div class="line">    <span class="keyword">if</span>(arguments[1]==<span class="string">"layer"</span>)&#123;</div><div class="line">      <span class="built_in">return</span> ComEventData[key];</div><div class="line">    &#125;<span class="keyword">else</span>&#123;</div><div class="line">      <span class="built_in">return</span> this.event_data[key];</div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">  dispatch: <span class="keyword">function</span> (eventname,data) &#123;</div><div class="line">    <span class="keyword">if</span>(data)&#123;</div><div class="line">      //alert(eventname+<span class="string">";"</span>+data);</div><div class="line">      this.event_data[eventname]=data;</div><div class="line">      ComEventData[eventname]=data;</div><div class="line">    &#125;</div><div class="line">    this.emit(eventname);</div><div class="line">  &#125;,</div><div class="line">  addEventListener: <span class="keyword">function</span>(eventname,callback) &#123;</div><div class="line">    this.on(eventname, callback);//注册监听</div><div class="line">  &#125;,</div><div class="line">  removeEventListener: <span class="keyword">function</span>(eventname,callback) &#123;</div><div class="line">    this.removeListener(eventname, callback);</div><div class="line">  &#125;</div><div class="line">&#125;);</div><div class="line">module.exports = ComEventListStore;</div></pre></td></tr></table></figure>
+<p>在 Store 注册给 dispatcher 的回调函数中会接受到分发的 action，因为每个 action 都会分发给所有注册的回调，所以回调函数里面要判断这个 action 的 type 并调用相关的内部方法处理更新 action 带过来的数据，再通知 view 数据变更。</p>
+<p>Store 里面不会暴露直接操作数据的方法给外部，暴露给外部调用的方法都是 Getter 方法，没有 Setter 方法，唯一更新数据的手段就是通过在 dispatcher 注册的回调函数。</p>
+<h3 id="View"><a href="#View" class="headerlink" title="View"></a>View</h3><p>View 就是 React 组件，从 Store 获取状态（数据），绑定 change 事件处理。如 customer_components/bottom_component/BottomTrafficButtonMenu.js</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * 文件创建日期：2016/7/22.</div><div class="line"> * 作者：</div><div class="line"> * 功能描述：</div><div class="line"> *</div><div class="line"> */</div><div class="line">var  lastType = null;</div><div class="line">var BottomTraficButtonMenu=React.createClass(&#123;</div><div class="line">    getInitialState: <span class="function"><span class="title">function</span></span> () &#123;</div><div class="line">        <span class="built_in">return</span> &#123;</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    clearChoosed: <span class="function"><span class="title">function</span></span> () &#123;</div><div class="line">        <span class="keyword">if</span>(lastType)&#123;</div><div class="line">            lastType.src=lastType.src.replace(<span class="string">"_hover.png"</span>,<span class="string">".png"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    componentDidMount: <span class="function"><span class="title">function</span></span>() &#123;</div><div class="line">        lastType = $(<span class="string">"#ALLSubject"</span>)[0];</div><div class="line">        FluxComEvent.store.addEventListener(EventName.ILLEGAL_CLICK,this.clearChoosed);</div><div class="line">    &#125;,</div><div class="line">    componentWillUnmount: <span class="function"><span class="title">function</span></span>() &#123;</div><div class="line">        FluxComEvent.store.removeEventListener(EventName.ILLEGAL_CLICK,this.clearChoosed);</div><div class="line">    &#125;,</div><div class="line">    subjectSwitchHandler:<span class="keyword">function</span>(event)&#123;</div><div class="line">        <span class="keyword">if</span>(lastType)&#123;</div><div class="line">            lastType.src=lastType.src.replace(<span class="string">"_hover.png"</span>,<span class="string">".png"</span>);</div><div class="line">        &#125;</div><div class="line">        lastType = event.currentTarget,</div><div class="line">            lastType.src=lastType.src.replace(<span class="string">".png"</span>,<span class="string">"_hover.png"</span>);</div><div class="line">        $(<span class="string">"#wfDSO"</span>).css(<span class="string">"color"</span>, <span class="string">"#FFFFFF"</span>);</div><div class="line">        FluxComEvent.action.dispatch(EventName.BOTTOM_TYPE_CLICK, event.target.id);</div><div class="line">    &#125;,</div><div class="line">    render:<span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">        <span class="built_in">return</span>(</div><div class="line">            &lt;div id=<span class="string">'div_subjectSwitch'</span> className=<span class="string">"div_subjectSwitch_style"</span>&gt;</div><div class="line">                &lt;img id=<span class="string">'ALLSubject'</span> className=<span class="string">"menuImg_style"</span> src=<span class="string">'./modules/dsp/gisapi/assets/brn_1_hover.png'</span> title=<span class="string">'整体指标'</span>  onClick=&#123;this.subjectSwitchHandler&#125;/&gt;</div><div class="line">                &lt;img id=<span class="string">'CONGESTION'</span> className=<span class="string">"menuImg_style"</span> src=<span class="string">'./modules/dsp/gisapi/assets/brn_2.png'</span> title=<span class="string">'拥堵专题'</span>  onClick=&#123;this.subjectSwitchHandler&#125; /&gt;</div><div class="line">                &lt;img id=<span class="string">'SEGMENT_FLOW'</span>  className=<span class="string">"menuImg_style"</span> src=<span class="string">'./modules/dsp/gisapi/assets/brn_4.png'</span> title=<span class="string">'流量专题'</span>  onClick=&#123;this.subjectSwitchHandler &#125;/&gt;</div><div class="line">                &lt;img id=<span class="string">'SEGMENT_SPEED'</span> className=<span class="string">"menuImg_style"</span> src=<span class="string">'./modules/dsp/gisapi/assets/brn_3.png'</span> title=<span class="string">'速度专题'</span>  onClick=&#123;this.subjectSwitchHandler&#125; /&gt;</div><div class="line">                &lt;img id=<span class="string">'TIMING'</span>  className=<span class="string">"menuImg_style"</span> src=<span class="string">'./modules/dsp/gisapi/assets/brn_6.png'</span> title=<span class="string">"时间"</span> onClick=&#123;this.subjectSwitchHandler&#125;  /&gt;</div><div class="line">                &lt;img id=<span class="string">'SATURATION'</span> className=<span class="string">"menuImg_style"</span> src=<span class="string">'./modules/dsp/gisapi/assets/brn_5.png'</span> title=<span class="string">'饱和度专题'</span>  onClick=&#123;this.subjectSwitchHandler&#125; /&gt;</div><div class="line">            &lt;/div&gt;</div><div class="line">        )</div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line">module.exports = BottomTraficButtonMenu;</div></pre></td></tr></table></figure>
+<p>一个View可能关联多个Store来管理不同事件的处理。需要注意的就是，当组件移除的时候事件监听也应该一起移除掉。</p>
+<blockquote>
+<p>更多资料<br><a href="https://speakerdeck.com/fisherwebdev/fluxchat" target="_blank" rel="external">Flux chat </a>很简洁明了的一个 Slide</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/25/React with Webpack/" rel="next" title="React结合Webpack使用">
+                <i class="fa fa-chevron-left"></i> React结合Webpack使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/27/Redux and lib bulid/" rel="prev" title="React交互二：Redux 以及库打包方法介绍">
+                React交互二：Redux 以及库打包方法介绍 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/head.jpg"
+               alt="gracechan6" />
+          <p class="site-author-name" itemprop="name">gracechan6</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Flux"><span class="nav-number">1.</span> <span class="nav-text">Flux</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#单向数据流"><span class="nav-number">1.1.</span> <span class="nav-text">单向数据流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dispatcher"><span class="nav-number">1.2.</span> <span class="nav-text">Dispatcher</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Action"><span class="nav-number">1.3.</span> <span class="nav-text">Action</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Store"><span class="nav-number">1.4.</span> <span class="nav-text">Store</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#View"><span class="nav-number">1.5.</span> <span class="nav-text">View</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gracechan6</span>
+</div>
+
+
+<div class="powered-by">
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

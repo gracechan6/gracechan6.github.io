@@ -380,6 +380,321 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://gracechan6.github.io/2016/10/27/Redux and lib bulid/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="gracechan6">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Grace's BLOG">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/10/27/Redux and lib bulid/" itemprop="url">React交互二：Redux 以及库打包方法介绍</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-10-27T10:36:13+08:00">
+                2016-10-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Redux"><a href="#Redux" class="headerlink" title="Redux"></a>Redux</h2><p>上一章介绍了Flux，但是Flux也有一个问题就是一个动作里面处理逻辑的时候在派发一个事件，那无法处理，系统会中断报错。而本章要讲的Redux就很好的解决了这个问题。Redux 是 JavaScript 状态容器，提供可预测化的状态管理。<br>可以让你构建一致化的应用，运行于不同的环境（客户端、服务器、原生应用），并且易于测试。不仅于此，它还提供 超爽的开发体验，比如有一个时间旅行调试器可以编辑后实时预览。<br>Redux 除了和 React 一起用外，还支持其它界面库。<br>它体小精悍（只有2kB）且没有任何依赖。</p>
+<h3 id="Redux-和传统-Flux-框架的比较"><a href="#Redux-和传统-Flux-框架的比较" class="headerlink" title="Redux 和传统 Flux 框架的比较"></a>Redux 和传统 Flux 框架的比较</h3><p>viewer文件结构图<br><img src="/images/Redux.jpg" alt="viewer文件结构图"></p>
+<p>从图片中可以看出来区别就是dispatch那部分拆成了Reducer和MiddleWare，实际操作起来区别还是蛮大的。可以从下面看出来的。</p>
+<h3 id="Action-发生了什么"><a href="#Action-发生了什么" class="headerlink" title="Action 发生了什么"></a>Action 发生了什么</h3><p>直接看代码吧 /reduxEvent/actions/OPAction.js</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * Created by graceChen on 2016/7/8.</div><div class="line"> */</div><div class="line">var <span class="built_in">type</span>=<span class="string">""</span>;</div><div class="line">var OPAction = &#123;</div><div class="line">    doAction:<span class="keyword">function</span>(<span class="built_in">type</span>,text)&#123;</div><div class="line">        this.type=<span class="built_in">type</span>;</div><div class="line">        <span class="built_in">return</span>&#123;</div><div class="line">            <span class="built_in">type</span>:<span class="built_in">type</span>,</div><div class="line">            text:text</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line">module .exports=OPAction;</div></pre></td></tr></table></figure>
+<p>可以看出和Flux有细微的区别，Flux需要通过aciton触发store，而这里是通过定义不同的方法，把数据从应用（注：这里之所以不叫 view 是因为这些数据有可能是服务器响应，用户输入或其它非 view 的数据）传到 store 的有效载荷。它是 store数据的唯一来源。一般来说你会通过 store.dispatch() 将 action 传到 store。<br>在Action里创建了一个函数，只是简单的返回一个action，在传统的 Flux 实现中，当调用 action 创建函数时，一般会触发一个 dispatch，而不同的是，Redux 中只需把 action 创建函数的结果传给 dispatch() 方法即可发起一次 dispatch 过程。</p>
+<h3 id="Reducer-怎么做"><a href="#Reducer-怎么做" class="headerlink" title="Reducer 怎么做"></a>Reducer 怎么做</h3><p>Action 只是描述了有事情发生了这一事实，并没有指明应用如何更新 state。而这正是 reducer 要做的事情。/reduxEvent/reducers/OPReducer.js</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * Created by graceChen on 2016/7/11.</div><div class="line"> */</div><div class="line">var initialState = &#123;</div><div class="line">    item:&#123;&#125;,</div><div class="line">    <span class="built_in">type</span>:<span class="string">''</span></div><div class="line">&#125;;</div><div class="line">var OPReducer = <span class="keyword">function</span>(state=initialState, action)&#123;</div><div class="line">    var item = state.item;</div><div class="line">    item[action.type]=action.text;</div><div class="line">    <span class="built_in">return</span> Object.assign(&#123;&#125;,state,&#123;<span class="built_in">type</span>:action.type,item:item&#125;);</div><div class="line">    state.item[action.type] = action.text;</div><div class="line">    state.type = action.type;</div><div class="line">    <span class="built_in">return</span> state;</div><div class="line">&#125;;</div><div class="line">module .exports= OPReducer;</div></pre></td></tr></table></figure>
+<p>在Redux里面，所有的 state 都被保存在一个单一对象中。上面写的就是根据项目的结构构思出来的对对象的一个比较简单的表现形式。<br>type:交互(事件)类型<br>item:不同类型里的不同数据(可以数组)</p>
+<p>随着应用变得复杂，需要对 reducer 函数 进行拆分，拆分后的每一块独立负责管理 state 的一部分。这个时候就可以用到combineReducers，它的作用就是把一个由多个不同 reducer 函数作为 value 的 object，合并成一个最终的 reducer 函数，然后就可以对这个 reducer 调用 createStore。/reduxEvent/reducers/OPCombineReducers.js</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * Created by graceChen on 2016/7/11.</div><div class="line"> */</div><div class="line">var OPReducer = require(<span class="string">'./OPReducer'</span>);</div><div class="line">//使用redux的combineReducers方法将所有reducer打包起来</div><div class="line">var OPCombineReducers = Redux.combineReducers(&#123;</div><div class="line">    OPReducer</div><div class="line">&#125;);</div><div class="line">module.exports = OPCombineReducers;</div></pre></td></tr></table></figure>
+<p>以逗号间隔一个一个引用进来就行，最后页面需要的时候直接引用一个OPCombineReducers即可。</p>
+<h3 id="Store-怎么做以及维护"><a href="#Store-怎么做以及维护" class="headerlink" title="Store 怎么做以及维护"></a>Store 怎么做以及维护</h3><p>Store 就是用来维持应用所有的 state 树 的一个对象。 改变 store 内 state 的惟一途径是对它 dispatch 一个 action。<br>区分Flux:Redux没有Dispatcher且不支持多个store。相反，只有一个单一的store和一个根级的reduce函数（reducer）。随着应用不断变大，你应该把根级的 reducer 拆成多个小的 reducers，分别独立地操作state树的不同部分，而不是添加新的stores。这就像一个React应用只有一个根级的组件，这个根组件又由很多小组件构成。<br>/reduxEvent/store/OPStore.js</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var todoReducer = require(<span class="string">'../reducers/OPCombineReducers'</span>);</div><div class="line">var OPStore = Redux.createStore(todoReducer);</div><div class="line">module .exports =OPStore;</div><div class="line">``` </div><div class="line"></div><div class="line">createStore() 的第二个参数是可选的,用于设置state初始状态。这对开发同构应用时非常有用，服务器端redux应用的state结构可以与客户端保持一致那么客户端可以将从网络接收到的服务端 state 直接用于本地数据初始化。</div><div class="line"></div><div class="line">``` bash</div><div class="line"><span class="built_in">let</span> store = createStore(todoApp, window.STATE_FROM_SERVER);</div></pre></td></tr></table></figure>
+<h3 id="View-页面展示"><a href="#View-页面展示" class="headerlink" title="View 页面展示"></a>View 页面展示</h3><p>这里只显示关键代码，实际项目中应用比较多比较广，全部js代码比较长，就不全贴出来了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">refreshDataHandler:<span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">       //判断dispatch中的<span class="built_in">type</span>是否和本地监听的事件名一致，如果一致则正常操作，否则不操作。</div><div class="line">       <span class="keyword">if</span> (ReduxEvent.Action.type != EventName.TIME_CHANGE)</div><div class="line">           <span class="built_in">return</span>;</div><div class="line">       console.log(<span class="string">"时间轴事件派发开始："</span>+ReduxEvent.Action.type);</div><div class="line">       var timeValue = ReduxEvent.Store.getState().OPReducer.item[EventName.TIME_CHANGE];</div><div class="line">       var timeGap = timeValue.TimeGap;</div><div class="line">       <span class="keyword">if</span> (timeGap*1%5==0) &#123;</div><div class="line">           this.updateDevicesStaticInfo();</div><div class="line">       &#125;</div><div class="line">   &#125;,</div><div class="line">	componentDidMount: <span class="function"><span class="title">function</span></span>() &#123;</div><div class="line">       this.unsubscribe = ReduxEvent.Store.subscribe(this.refreshDataHandler);//注册监听事件 以及返回注销方法</div><div class="line">   &#125;,</div><div class="line">   componentWillUnmount: <span class="function"><span class="title">function</span></span>() &#123;</div><div class="line">       this.unsubscribe();//注销事件</div><div class="line">   &#125;,</div></pre></td></tr></table></figure>
+<p>ReduxEvent.Store 这个是用直接打包出来的库直接引用的，下面会有介绍。html页面直接引用了一个js，即ReduxEvent.js文件，上面的各种js文件都没有引用，因为压缩打包成一个了。</p>
+<blockquote>
+<p>参考文献<br><a href="http://cn.redux.js.org/index.html" target="_blank" rel="external">Redux 中文文档</a><br><a href="http://www.cnblogs.com/lewis617/p/5145073.html" target="_blank" rel="external">react+redux教程</a></p>
+</blockquote>
+<h2 id="库打包"><a href="#库打包" class="headerlink" title="库打包"></a>库打包</h2><p>这里直接简单介绍下Redux的打包方法，已经写好了一个比较完善的机制，不需要再去修改它，直接可以各个项目中使用的，那就可以直接打包成一个库文件，到时候直接引用即可，方便简单，省时省力。</p>
+<h3 id="先定义一个ReduxEvent文件，把需要用到的Store和Action引用在一起，方便调用"><a href="#先定义一个ReduxEvent文件，把需要用到的Store和Action引用在一起，方便调用" class="headerlink" title="先定义一个ReduxEvent文件，把需要用到的Store和Action引用在一起，方便调用"></a>先定义一个ReduxEvent文件，把需要用到的Store和Action引用在一起，方便调用</h3><p>/reduxEvent/ReduxEvent.js</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * Created by graceChen on 2016/7/20.</div><div class="line"> */</div><div class="line">var Store = require(<span class="string">"./store/OPStore"</span>);</div><div class="line">var Action = require(<span class="string">"./actions/OPAction"</span>);</div><div class="line">var ReduxEvent=&#123;</div><div class="line">    Store:Store,</div><div class="line">    Action:Action</div><div class="line">&#125;</div><div class="line">module.exports = ReduxEve</div></pre></td></tr></table></figure>
+<h3 id="另外写一个library-config-js打包文件"><a href="#另外写一个library-config-js打包文件" class="headerlink" title="另外写一个library.config.js打包文件"></a>另外写一个library.config.js打包文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * 文件创建日期：2016/7/20.</div><div class="line"> * 作者：gracechan</div><div class="line"> * 功能描述：打包库</div><div class="line"> * 编写配置参考：http://fakefish.github.io/react-webpack-cookbook/Authoring-libraries.html</div><div class="line"> */</div><div class="line">module.exports = &#123;</div><div class="line">    externals:&#123;</div><div class="line">        //第三方或者本地组件在此添加将不会被webpack打包，然后需要在页面中自行引入js库</div><div class="line">        <span class="string">"react"</span>:<span class="string">'React'</span>,</div><div class="line">        <span class="string">"react-dom"</span>:<span class="string">'ReactDOM'</span>,</div><div class="line">        <span class="string">"redux"</span>:<span class="string">"Redux"</span>,</div><div class="line">        <span class="string">"flux"</span>:<span class="string">"Flux"</span>,</div><div class="line">    &#125;,</div><div class="line">    entry:&#123;//指定打包的入口文件，每有一个键值对，就是一个入口文件</div><div class="line">        ReduxEvent: [<span class="string">"./common/reduxEvent/ReduxEvent.js"</span>]</div><div class="line">    &#125;,</div><div class="line">    output: &#123; //配置打包结果，path定义了输出的文件夹，filename则定义了打包结果文件的名称</div><div class="line">        filename: <span class="string">"../react/[name].js"</span>,</div><div class="line">        libraryTarget: <span class="string">'umd'</span>,</div><div class="line">        library: <span class="string">'[name]'</span>, //库名 引用里面文件的时候也是以库名来引用的</div><div class="line">    &#125;,</div><div class="line">    resolve: &#123;//定义了解析模块路径时的配置，常用的就是extensions，可以用来指定模块的后缀，这样在引入模块时就不需要写后缀了，会自动补全</div><div class="line">        extensions: [<span class="string">''</span>,<span class="string">'.js'</span>,<span class="string">'.jsx'</span>]</div><div class="line">    &#125;,</div><div class="line">    module: &#123;//定义了对模块的处理逻辑，这里可以用</div><div class="line">        loaders: [//loaders定义了一系列的加载器，以及一些正则。当需要加载的文件匹配<span class="built_in">test</span>的正则时，就会调用后面的loader对文件进行处理，这正是webpack强大的原因。</div><div class="line">            &#123; <span class="built_in">test</span>: /\.js$/, loader: <span class="string">'jsx-loader'</span> &#125;,</div><div class="line">            &#123; <span class="built_in">test</span>: /\.css$/, loader: <span class="string">"style!css"</span> &#125;</div><div class="line">        ]</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>这个文件看起来应该很熟悉了，就是一开始第一篇文章《React结合Webpack使用》里面介绍的文件。</p>
+<p>打开命令窗口，定位到这个打包文件目录下，运行 npm run wlib 即可打包文件。完成后可以去react文件夹下查看是否输出成功，然后在相应的html文件里面直接引用该文件即可使用！~</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://gracechan6.github.io/2016/10/27/Flux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="gracechan6">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Grace's BLOG">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/10/27/Flux/" itemprop="url">React交互一：Flux</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-10-27T10:23:38+08:00">
+                2016-10-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Flux"><a href="#Flux" class="headerlink" title="Flux"></a>Flux</h2><p>现在的很多在使用的系统都采取的是MVC模式，而前一篇介绍的React自称在MVC里面代表V 的部分，那么Flux就相当于添加M和C的部分。Flux是 Facebook 使用的一套前端应用的架构模式。</p>
+<p>一个 Flux 应用主要包含四个部分：</p>
+<ul>
+<li><p>The Dispatcher<br>处理动作分发，维护 Store 之间的依赖关系</p>
+</li>
+<li><p>The Stores<br>用来存储数据和处理逻辑部分</p>
+</li>
+<li><p>The Views<br>控制React 组件，这一层可以看作 controller-views，作为视图同时响应用户交互</p>
+</li>
+<li><p>The Actions<br>提供给 dispatcher 传递数据给 store</p>
+</li>
+</ul>
+<p>针对以上提出的概念，下面使用目前项目在使用的几个文件内容来实现这些功能，当然，网络上有很多这类开源的文件，实际项目中也是在这些开源的项目上再进行优化使用的。<br>单向数据流</p>
+<h3 id="单向数据流"><a href="#单向数据流" class="headerlink" title="单向数据流"></a>单向数据流</h3><p>先来了解下Flux的核心“单向数据流“怎么运作的：</p>
+<p><code>Action -&gt; Dispatcher -&gt; Store -&gt; View</code></p>
+<p>更多时候 View 会通过用户交互触发 Action，所以一个简单完整的数据流类似这样：<br>viewer文件结构图</p>
+<p>项目对于交互的整个流程如下：</p>
+<ul>
+<li><p>首先要有action，通过定义一些 action creator 方法根据需要创建 Action 将数据提供给 dispatcher</p>
+</li>
+<li><p>View 层（React组件）通过用户交互会触发 Action</p>
+</li>
+<li><p>Dispatcher 会分发触发的 Action 给所有注册的 Store 的回调函数</p>
+</li>
+<li><p>Store 回调函数根据接收的 Action 更新自身数据之后会触发一个 change 事件通知 View 数据更改了</p>
+</li>
+<li><p>View 会监听这个 change 事件，拿到对应的新数据并调用 setState 更新组件 UI</p>
+</li>
+</ul>
+<p>所有的状态都由 Store 来维护，通过 Action 传递数据，构成了如上所述的单向数据流循环，所以应用中的各部分分工就相当明确，高度解耦了。<br>这种单向数据流使得整个系统都是透明可预测的。</p>
+<h3 id="Dispatcher"><a href="#Dispatcher" class="headerlink" title="Dispatcher"></a>Dispatcher</h3><p>一个应用只需要一个 dispatcher 作为分发中心，管理所有数据流向，分发动作给 Store，没有太多其他的逻辑（一些 action creator 方法也可以放到这里）。<br>Dispatcher 分发动作给 Store 注册的回调函数，这和一般的订阅/发布模式不同的地方在于：</p>
+<ul>
+<li><p>回调函数不是订阅到某一个特定的事件/频道，每个动作会分发给所有注册的回调函数</p>
+</li>
+<li><p>回调函数可以指定在其他回调之后调用</p>
+</li>
+</ul>
+<p>参见comEventMessage/ComEventDispatcher.js<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">var Dispatcher = require(<span class="string">'flux'</span>).Dispatcher;</div><div class="line">var ComEventDispatcher = new Dispatcher();</div><div class="line">var ComEventStore = require(<span class="string">'./ComEventListStore'</span>);</div><div class="line">ComEventDispatcher.register(<span class="keyword">function</span> (action) &#123;</div><div class="line">      ComEventStore.dispatch(action.actionType,action.text);</div><div class="line">&#125;);//主要是这句话</div><div class="line">module.exports = ComEventDispatcher;</div></pre></td></tr></table></figure></p>
+<h3 id="Action"><a href="#Action" class="headerlink" title="Action"></a>Action</h3><p>首先要创建动作，通过定义一些 action creator 方法来创建，这些方法用来暴露给外部调用，通过 dispatch 分发对应的动作，所以 action creator 也称作 dispatcher helper methods 辅助 dipatcher 分发。 参见comEventMessage/ComEventAction.js</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">var ComEventDispatcher = require(<span class="string">'./ComEventDispatcher'</span>);</div><div class="line">var ComEventAction = &#123;</div><div class="line">    dispatch: <span class="keyword">function</span> (eventname,data) &#123;</div><div class="line">        ComEventDispatcher.dispatch(&#123;</div><div class="line">            actionType: eventname,</div><div class="line">            text: data</div><div class="line">        &#125;);</div><div class="line">    &#125;,</div><div class="line">    stopDispatch:<span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">        ComEventDispatcher._stopDispatching();</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line">module.exports = ComEventAction;</div></pre></td></tr></table></figure>
+<p>这里的dispatch就是action creator，通过用户的交互触发，比如按钮点击。当然不单单用户触发才调用，也可以通过计时器的方式等的，然后分发给Store初始数据。通过这一个动作我们可以看出动作其实就是用来封装数据和传递数据的。</p>
+<h3 id="Store"><a href="#Store" class="headerlink" title="Store"></a>Store</h3><p>Store中包含应用的状态和处理逻辑，不同的Store可以管理应用中不同部分的状态。本项目中只使用了一个Store，直接在相应React组件中直接监听相应actionType，然后做出不同的事件处理。（处理逻辑和Flex事件的处理处理逻辑类似的）如comEventMessage/ComEventListStore.js</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">var EventEmitter = require(<span class="string">'events'</span>).EventEmitter;</div><div class="line">var assign = require(<span class="string">'object-assign'</span>);</div><div class="line">var ComEventListStore = assign(&#123;&#125;, EventEmitter.prototype, &#123;</div><div class="line">  event_data: &#123;&#125;,</div><div class="line">  getAll: <span class="function"><span class="title">function</span></span> () &#123;//获取所有数据</div><div class="line">    <span class="built_in">return</span> this.event_data;</div><div class="line">  &#125;,</div><div class="line">  getOne:<span class="keyword">function</span>(key)&#123;//依据key查找单个</div><div class="line">    <span class="keyword">if</span>(arguments[1]==<span class="string">"layer"</span>)&#123;</div><div class="line">      <span class="built_in">return</span> ComEventData[key];</div><div class="line">    &#125;<span class="keyword">else</span>&#123;</div><div class="line">      <span class="built_in">return</span> this.event_data[key];</div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">  dispatch: <span class="keyword">function</span> (eventname,data) &#123;</div><div class="line">    <span class="keyword">if</span>(data)&#123;</div><div class="line">      //alert(eventname+<span class="string">";"</span>+data);</div><div class="line">      this.event_data[eventname]=data;</div><div class="line">      ComEventData[eventname]=data;</div><div class="line">    &#125;</div><div class="line">    this.emit(eventname);</div><div class="line">  &#125;,</div><div class="line">  addEventListener: <span class="keyword">function</span>(eventname,callback) &#123;</div><div class="line">    this.on(eventname, callback);//注册监听</div><div class="line">  &#125;,</div><div class="line">  removeEventListener: <span class="keyword">function</span>(eventname,callback) &#123;</div><div class="line">    this.removeListener(eventname, callback);</div><div class="line">  &#125;</div><div class="line">&#125;);</div><div class="line">module.exports = ComEventListStore;</div></pre></td></tr></table></figure>
+<p>在 Store 注册给 dispatcher 的回调函数中会接受到分发的 action，因为每个 action 都会分发给所有注册的回调，所以回调函数里面要判断这个 action 的 type 并调用相关的内部方法处理更新 action 带过来的数据，再通知 view 数据变更。</p>
+<p>Store 里面不会暴露直接操作数据的方法给外部，暴露给外部调用的方法都是 Getter 方法，没有 Setter 方法，唯一更新数据的手段就是通过在 dispatcher 注册的回调函数。</p>
+<h3 id="View"><a href="#View" class="headerlink" title="View"></a>View</h3><p>View 就是 React 组件，从 Store 获取状态（数据），绑定 change 事件处理。如 customer_components/bottom_component/BottomTrafficButtonMenu.js</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * 文件创建日期：2016/7/22.</div><div class="line"> * 作者：</div><div class="line"> * 功能描述：</div><div class="line"> *</div><div class="line"> */</div><div class="line">var  lastType = null;</div><div class="line">var BottomTraficButtonMenu=React.createClass(&#123;</div><div class="line">    getInitialState: <span class="function"><span class="title">function</span></span> () &#123;</div><div class="line">        <span class="built_in">return</span> &#123;</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    clearChoosed: <span class="function"><span class="title">function</span></span> () &#123;</div><div class="line">        <span class="keyword">if</span>(lastType)&#123;</div><div class="line">            lastType.src=lastType.src.replace(<span class="string">"_hover.png"</span>,<span class="string">".png"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    componentDidMount: <span class="function"><span class="title">function</span></span>() &#123;</div><div class="line">        lastType = $(<span class="string">"#ALLSubject"</span>)[0];</div><div class="line">        FluxComEvent.store.addEventListener(EventName.ILLEGAL_CLICK,this.clearChoosed);</div><div class="line">    &#125;,</div><div class="line">    componentWillUnmount: <span class="function"><span class="title">function</span></span>() &#123;</div><div class="line">        FluxComEvent.store.removeEventListener(EventName.ILLEGAL_CLICK,this.clearChoosed);</div><div class="line">    &#125;,</div><div class="line">    subjectSwitchHandler:<span class="keyword">function</span>(event)&#123;</div><div class="line">        <span class="keyword">if</span>(lastType)&#123;</div><div class="line">            lastType.src=lastType.src.replace(<span class="string">"_hover.png"</span>,<span class="string">".png"</span>);</div><div class="line">        &#125;</div><div class="line">        lastType = event.currentTarget,</div><div class="line">            lastType.src=lastType.src.replace(<span class="string">".png"</span>,<span class="string">"_hover.png"</span>);</div><div class="line">        $(<span class="string">"#wfDSO"</span>).css(<span class="string">"color"</span>, <span class="string">"#FFFFFF"</span>);</div><div class="line">        FluxComEvent.action.dispatch(EventName.BOTTOM_TYPE_CLICK, event.target.id);</div><div class="line">    &#125;,</div><div class="line">    render:<span class="function"><span class="title">function</span></span>()&#123;</div><div class="line">        <span class="built_in">return</span>(</div><div class="line">            &lt;div id=<span class="string">'div_subjectSwitch'</span> className=<span class="string">"div_subjectSwitch_style"</span>&gt;</div><div class="line">                &lt;img id=<span class="string">'ALLSubject'</span> className=<span class="string">"menuImg_style"</span> src=<span class="string">'./modules/dsp/gisapi/assets/brn_1_hover.png'</span> title=<span class="string">'整体指标'</span>  onClick=&#123;this.subjectSwitchHandler&#125;/&gt;</div><div class="line">                &lt;img id=<span class="string">'CONGESTION'</span> className=<span class="string">"menuImg_style"</span> src=<span class="string">'./modules/dsp/gisapi/assets/brn_2.png'</span> title=<span class="string">'拥堵专题'</span>  onClick=&#123;this.subjectSwitchHandler&#125; /&gt;</div><div class="line">                &lt;img id=<span class="string">'SEGMENT_FLOW'</span>  className=<span class="string">"menuImg_style"</span> src=<span class="string">'./modules/dsp/gisapi/assets/brn_4.png'</span> title=<span class="string">'流量专题'</span>  onClick=&#123;this.subjectSwitchHandler &#125;/&gt;</div><div class="line">                &lt;img id=<span class="string">'SEGMENT_SPEED'</span> className=<span class="string">"menuImg_style"</span> src=<span class="string">'./modules/dsp/gisapi/assets/brn_3.png'</span> title=<span class="string">'速度专题'</span>  onClick=&#123;this.subjectSwitchHandler&#125; /&gt;</div><div class="line">                &lt;img id=<span class="string">'TIMING'</span>  className=<span class="string">"menuImg_style"</span> src=<span class="string">'./modules/dsp/gisapi/assets/brn_6.png'</span> title=<span class="string">"时间"</span> onClick=&#123;this.subjectSwitchHandler&#125;  /&gt;</div><div class="line">                &lt;img id=<span class="string">'SATURATION'</span> className=<span class="string">"menuImg_style"</span> src=<span class="string">'./modules/dsp/gisapi/assets/brn_5.png'</span> title=<span class="string">'饱和度专题'</span>  onClick=&#123;this.subjectSwitchHandler&#125; /&gt;</div><div class="line">            &lt;/div&gt;</div><div class="line">        )</div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line">module.exports = BottomTraficButtonMenu;</div></pre></td></tr></table></figure>
+<p>一个View可能关联多个Store来管理不同事件的处理。需要注意的就是，当组件移除的时候事件监听也应该一起移除掉。</p>
+<blockquote>
+<p>更多资料<br><a href="https://speakerdeck.com/fisherwebdev/fluxchat" target="_blank" rel="external">Flux chat </a>很简洁明了的一个 Slide</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://gracechan6.github.io/2016/08/25/React with Webpack/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -563,7 +878,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">Artikel</span>
               </a>
             </div>
