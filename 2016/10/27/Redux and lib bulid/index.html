@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Redux lib," />
 
 
 
@@ -95,6 +95,7 @@
 
 
 <meta name="description" content="Redux上一章介绍了Flux，但是Flux也有一个问题就是一个动作里面处理逻辑的时候在派发一个事件，那无法处理，系统会中断报错。而本章要讲的Redux就很好的解决了这个问题。Redux 是 JavaScript 状态容器，提供可预测化的状态管理。可以让你构建一致化的应用，运行于不同的环境（客户端、服务器、原生应用），并且易于测试。不仅于此，它还提供 超爽的开发体验，比如有一个时间旅行调试器可以编">
+<meta name="keywords" content="Redux lib">
 <meta property="og:type" content="article">
 <meta property="og:title" content="React交互二：Redux 以及库打包方法介绍">
 <meta property="og:url" content="https://gracechan6.github.io/2016/10/27/Redux and lib bulid/index.html">
@@ -102,7 +103,7 @@
 <meta property="og:description" content="Redux上一章介绍了Flux，但是Flux也有一个问题就是一个动作里面处理逻辑的时候在派发一个事件，那无法处理，系统会中断报错。而本章要讲的Redux就很好的解决了这个问题。Redux 是 JavaScript 状态容器，提供可预测化的状态管理。可以让你构建一致化的应用，运行于不同的环境（客户端、服务器、原生应用），并且易于测试。不仅于此，它还提供 超爽的开发体验，比如有一个时间旅行调试器可以编">
 <meta property="og:locale" content="ZH EN">
 <meta property="og:image" content="https://gracechan6.github.io/images/Redux.jpg">
-<meta property="og:updated_time" content="2017-09-13T05:52:49.560Z">
+<meta property="og:updated_time" content="2017-09-13T06:04:27.223Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="React交互二：Redux 以及库打包方法介绍">
 <meta name="twitter:description" content="Redux上一章介绍了Flux，但是Flux也有一个问题就是一个动作里面处理逻辑的时候在派发一个事件，那无法处理，系统会中断报错。而本章要讲的Redux就很好的解决了这个问题。Redux 是 JavaScript 状态容器，提供可预测化的状态管理。可以让你构建一致化的应用，运行于不同的环境（客户端、服务器、原生应用），并且易于测试。不仅于此，它还提供 超爽的开发体验，比如有一个时间旅行调试器可以编">
@@ -207,7 +208,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Startseite
+            Home
           </a>
         </li>
       
@@ -217,7 +218,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archiv
+            Archives
           </a>
         </li>
       
@@ -291,7 +292,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Posted on</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-10-27T10:36:13+08:00">
                 2016-10-27
@@ -372,6 +373,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Redux-lib/" rel="tag"># Redux lib</a>
+          
+        </div>
+      
 
       
       
@@ -447,10 +454,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Inhaltsverzeichnis
+            Table of Contents
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Übersicht
+            Overview
           </li>
         </ul>
       
@@ -471,13 +478,22 @@
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
                 <span class="site-state-item-count">4</span>
-                <span class="site-state-item-name">Artikel</span>
+                <span class="site-state-item-name">posts</span>
               </a>
             </div>
           
 
           
 
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
           
 
         </nav>
@@ -541,7 +557,7 @@
 
 
 <div class="powered-by">
-  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
