@@ -94,13 +94,17 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Grace&#39;s BLOG">
-<meta property="og:url" content="https://gracechan6.github.io/index.html">
+<meta name="description" content="准备工作因为要使用webpack，需要先在电脑上安装nodeJs软件，并配置好电脑环境变量，即path中增加一条nodejs的安装路径（windows 7系统是自动添加的）。本文操作均按照本人已经在实际项目中编写的路径中填写，react相关根目录为viewer，即react相关代码均在该目录下编写。 安装webpack1$ npm install webpack -g 参数-g表示我们将全局(gl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React结合Webpack使用">
+<meta property="og:url" content="https://gracechan6.github.io/2016/08/25/React with Webpack/index.html">
 <meta property="og:site_name" content="Grace&#39;s BLOG">
+<meta property="og:description" content="准备工作因为要使用webpack，需要先在电脑上安装nodeJs软件，并配置好电脑环境变量，即path中增加一条nodejs的安装路径（windows 7系统是自动添加的）。本文操作均按照本人已经在实际项目中编写的路径中填写，react相关根目录为viewer，即react相关代码均在该目录下编写。 安装webpack1$ npm install webpack -g 参数-g表示我们将全局(gl">
 <meta property="og:locale" content="ZH EN">
+<meta property="og:updated_time" content="2017-09-13T02:19:59.757Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Grace&#39;s BLOG">
+<meta name="twitter:title" content="React结合Webpack使用">
+<meta name="twitter:description" content="准备工作因为要使用webpack，需要先在电脑上安装nodeJs软件，并配置好电脑环境变量，即path中增加一条nodejs的安装路径（windows 7系统是自动添加的）。本文操作均按照本人已经在实际项目中编写的路径中填写，react相关根目录为viewer，即react相关代码均在该目录下编写。 安装webpack1$ npm install webpack -g 参数-g表示我们将全局(gl">
 
 
 
@@ -129,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="https://gracechan6.github.io/"/>
+  <link rel="canonical" href="https://gracechan6.github.io/2016/08/25/React with Webpack/"/>
 
 
 
 
 
-  <title>Grace's BLOG</title>
+  <title>React结合Webpack使用 | Grace's BLOG</title>
   
 
 
@@ -160,9 +164,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-   page-home 
- ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -245,129 +247,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://gracechan6.github.io/2017/09/05/ospService-Cals/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="gracechan6">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/head.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Grace's BLOG">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/05/ospService-Cals/" itemprop="url">ospService Cals</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Veröffentlicht am</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-05T10:21:49+08:00">
-                2017-09-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="绩效得分"><a href="#绩效得分" class="headerlink" title="绩效得分"></a>绩效得分</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
 
   
 
@@ -397,9 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/08/25/React with Webpack/" itemprop="url">React结合Webpack使用</a></h1>
+          <h1 class="post-title" itemprop="name headline">React结合Webpack使用</h1>
         
 
         <div class="post-meta">
@@ -449,9 +329,7 @@
       
 
       
-        
-          
-            <h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>因为要使用webpack，需要先在电脑上安装nodeJs软件，并配置好电脑环境变量，即path中增加一条nodejs的安装路径（windows 7系统是自动添加的）。<br>本文操作均按照本人已经在实际项目中编写的路径中填写，react相关根目录为viewer，即react相关代码均在该目录下编写。</p>
+        <h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>因为要使用webpack，需要先在电脑上安装nodeJs软件，并配置好电脑环境变量，即path中增加一条nodejs的安装路径（windows 7系统是自动添加的）。<br>本文操作均按照本人已经在实际项目中编写的路径中填写，react相关根目录为viewer，即react相关代码均在该目录下编写。</p>
 <h3 id="安装webpack"><a href="#安装webpack" class="headerlink" title="安装webpack"></a>安装webpack</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install webpack -g</div></pre></td></tr></table></figure>
 <p>参数-g表示我们将全局(global)安装 webpack, 这样你就能使用 webpack 命令了.<br>webpack 也有一个 web 服务器 webpack-dev-server, 我们也安装上</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install webpack-dev-server -g</div></pre></td></tr></table></figure>
@@ -483,8 +361,6 @@
 </blockquote>
 <p><a href="http://www.cnblogs.com/giveiris/p/5237080.html" target="_blank" rel="external">WebPack实例与前端性能优化</a><br><a href="https://rhadow.github.io/2015/03/23/webpackIntro/" target="_blank" rel="external">如何使用 Webpack 模組整合工具</a></p>
 
-          
-        
       
     </div>
     
@@ -501,12 +377,28 @@
       
 
       
+      
+      
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/05/ospService-Cals/" rel="prev" title="ospService Cals">
+                ospService Cals <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
 
       
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -516,10 +408,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -527,6 +420,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -547,8 +444,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Übersicht
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/head.jpg"
@@ -592,6 +498,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备工作"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装webpack"><span class="nav-number">1.1.</span> <span class="nav-text">安装webpack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置package-json"><span class="nav-number">1.2.</span> <span class="nav-text">配置package.json</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写webpack配置文件"><span class="nav-number">1.3.</span> <span class="nav-text">编写webpack配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装依赖"><span class="nav-number">1.4.</span> <span class="nav-text">安装依赖</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装React"><span class="nav-number">1.4.1.</span> <span class="nav-text">安装React</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装jsx-css的loader"><span class="nav-number">1.4.2.</span> <span class="nav-text">安装jsx,css的loader</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -705,10 +627,10 @@
   
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
 
-  
+
 
   
 
