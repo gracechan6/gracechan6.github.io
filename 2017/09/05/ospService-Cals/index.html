@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="Grace&#39;s BLOG">
 <meta property="og:description" content="var _hmt = _hmt || []; (function() {   var hm = document.createElement(&quot;script&quot;);   hm.src = &quot;https://hm.baidu.com/hm.js?55cd88d2127e1e7e0d8a8e6b5b6a8c59&quot;;   var s = document.getElementsByTagName(&quot;sc">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-02-09T05:10:18.125Z">
+<meta property="og:updated_time" content="2018-02-14T01:20:50.971Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="淘宝云客服相关小功能使用">
 <meta name="twitter:description" content="var _hmt = _hmt || []; (function() {   var hm = document.createElement(&quot;script&quot;);   hm.src = &quot;https://hm.baidu.com/hm.js?55cd88d2127e1e7e0d8a8e6b5b6a8c59&quot;;   var s = document.getElementsByTagName(&quot;sc">
@@ -368,7 +368,7 @@ var _hmt = _hmt || [];
                 newGet=money-zengzhi-chengjian-jiaofu-difangjiaofu-geren;
                 mores="(增值税："+zengzhi+" 城建税："+chengjian+" 教附税："+jiaofu+" 地方教附税："+difangjiaofu+" 个人所得税"+geren+")";
             }
-            document.getElementById("realMoney").innerHTML="旧版税后:"+(oldGet*1).toFixed(2)+"<br/>新版税后:"+(newGet*1).toFixed(2)+mores;
+            document.getElementById("realMoney").innerHTML="旧版税后:"+(oldGet*1).toFixed(2)+"<br/>新版税后:"+(newGet*1).toFixed(2)+mores+"<br/>特云税后："+(newGet*1+(geren*1>500?500:geren*1));
         }
 
         var manyiAll=0;
